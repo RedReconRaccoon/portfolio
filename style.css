@@ -91,8 +91,13 @@ p  {
     transition: opacity 0.2s ease;
 }
 
-.logo-link:hover .logo-hover {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+    .logo-link:hover .logo-hover {
+        opacity: 1;
+    }
+    .logo-link:hover .logo {
+        opacity: 0;
+    }
 }
 
 .logo-link:hover .logo {

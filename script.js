@@ -28,3 +28,41 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     requestAnimationFrame(animateScroll);
   });
 });
+const contactForm = document.querySelector('.contact form');
+
+contactForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+  const status = contactForm.querySelector('.form-status');
+
+  submitButton.disabled = true;
+  status.classList.add('is-visible');
+  status.textContent = 'Sending...';
+
+  try {
+    const response = await fetch(contactForm.action, {
+      method: contactForm.method,
+      body: new FormData(contactForm),
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Unable to send your message.');
+    }
+
+    status.textContent = "Thank you, I'll be in touch.";
+    contactForm.reset();
+    setTimeout(() => {
+      status.classList.remove('is-visible');
+      status.textContent = '';
+    }, 3000);
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    submitButton.disabled = false;
+  }
+});
